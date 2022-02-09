@@ -1,12 +1,20 @@
 import axios from 'axios';
-const LOGIN_USER_KEY = 'WD_FORUM_LOGIN_USER_KEY';
+// const LOGIN_USER_KEY = "LOGIN_USER_KEY";
+export const LOGIN_USER_KEY = 'LOGIN_USER_KEY';
 
 var baseURL;
-if (process.env.REACT_APP_ENVIRONMENT && process.env.REACT_APP_ENVIRONMENT === 'PRODUCTION') {
-    baseURL = process.env.REACT_APP_API_BASE_URL;
-} else {
-    baseURL = 'http://127.0.0.1:8000';
-}
+baseURL = 'http://127.0.0.1:8000/';
+// require('dotenv').config()
+
+// export const LOGIN_USER_KEY = "HIVE_TECHWEAR_LOGIN_USER_KEY";
+// const { REACT_APP_ENVIRONMENT, REACT_APP_API_BASE_URL_PROD, REACT_APP_API_BASE_URL_DEV } = process.env;
+// let baseURL;
+
+// if (REACT_APP_ENVIRONMENT === "PRODUCTION") {
+// 	baseURL = REACT_APP_API_BASE_URL_PROD;
+// } else {
+// 	baseURL = REACT_APP_API_BASE_URL_DEV;
+// }
 
 const api = axios.create({
     baseURL: baseURL,
@@ -15,52 +23,52 @@ const api = axios.create({
     }
 });
 
-/**
- * Add requireToken: true in request config, for API that required Authorization token
- */
 api.interceptors.request.use(
     config => {
-        if (config.requireToken && localStorage.getItem(LOGIN_USER_KEY)) {
-            config.headers.common['Authorization'] = JSON.parse(localStorage.getItem(LOGIN_USER_KEY)).token;
+        if (config.requireToken) {
+            const user = localStorage.getItem(LOGIN_USER_KEY) ? JSON.parse(localStorage.getItem(LOGIN_USER_KEY)) : null;
+            config.headers.common['Authorization'] = user.token;
         }
 
         return config;
     },
-    err => {
-        console.error(err);
+    err => console.error(err)
+);
+
+api.interceptors.response.use(
+    response => {
+        return response.data;
+    },
+    error => {
+        console.log('error.response', error);
+        if (error.response.status === 401) {
+            localStorage.removeItem(LOGIN_USER_KEY);
+        }
+
+        return Promise.reject(error);
     }
 );
 
 export default class API {
-    getPosts = params => {
-        return api
-            .get('/posts/', { params })
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                throw new Error(error);
-            });
-    };
-    addPost = postBody => {
+    signUp = async signUpBody => {
         const formData = new FormData();
 
-        for (const key in postBody) {
-            formData.append(key, postBody[key]);
+        for (const key in signUpBody) {
+            formData.append(key, signUpBody[key]);
         }
 
-        return api
-            .post('/posts/add/', formData)
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                throw new Error(error);
-            });
+        return api.post('/users/signup/', formData);
     };
-    deletePost = id => {
-        return api.delete(`/posts/delete/${id}/`).catch(error => {
-            throw new Error(error);
-        });
+
+    signIn = async signInBody => {
+        const formData = new FormData();
+        for (const key in signInBody) {
+            formData.append(key, signInBody[key]);
+        }
+        return api.post('/users/signin/', formData);
+    };
+
+    getProducts = (query = {}) => {
+        return api.get('/products/', { params: query, requireToken: true });
     };
 }
