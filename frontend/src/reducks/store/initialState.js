@@ -7,9 +7,6 @@ const initialState = {
 			error: null,
 		},
 	},
-	categories: {
-		results: [],
-	},
 
 	carts: {
 		results: [],

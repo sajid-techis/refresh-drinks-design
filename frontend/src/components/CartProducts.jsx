@@ -1,41 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import { useDispatch } from 'react-redux';
+
+import { removeCart, updateCart } from '../reducks/cart/operations';
 import cross from '../assets/img/cross.svg';
 
-function CartProducts() {
+function CartProducts(props) {
+    console.log(props);
+    const { image, name, price } = props.cart.product;
+    let quantity = props.cart.quantity;
+    console.log(quantity);
+    const cartId = props.cart.id;
+    const dispatch = useDispatch();
+    const [openModalRemoveCart, setOpenModalRemoveCart] = useState(false);
+
+    const increaseCart = () => {
+        ++quantity;
+        dispatch(updateCart({ quantity }, cartId));
+    };
+    console.log(cartId);
+    const decreaseCart = () => {
+        --quantity;
+        if (quantity < 1) {
+            setOpenModalRemoveCart(true);
+        }
+        dispatch(updateCart({ quantity }, cartId));
+    };
     return (
-        <div>
-            <div class="wish-list-table">
-                <table>
-                    <tr>
-                        <th>Product</th>
-                        <th>Categoty</th>
-                        <th>Amount</th>
-                        <th>Price</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="product">
-                                <div class="circle">
-                                    <img src="img/fanta-zero.png" alt="fanta-zero" />
-                                </div>
-                                <div class="product-details">
-                                    <span>Fanta(Zero)</span>
-                                    <p>#261311</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Soft Drinks</td>
-                        <td>
-                            <button>- 1 +</button>
-                        </td>
-                        <td>$89.99</td>
-                        <td>
-                            <img src={cross} alt="cross" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        <>
+            <tr>
+                <td>
+                    <div class="product">
+                        <div class="circle">
+                            <img src={`https://res.cloudinary.com/techis/${image}`} alt="fanta-zero" />
+                        </div>
+                        <div class="product-details">
+                            <span>{name}</span>
+                            <p>#261311</p>
+                        </div>
+                    </div>
+                </td>
+                <td>Soft Drinks</td>
+                <td>
+                    <div className="added-cart">
+                        <span onClick={decreaseCart}> - </span>
+                        <span className="margin-top-4"> {quantity} </span>
+                        <span onClick={increaseCart} className="margin-top-4">
+                            +
+                        </span>
+                    </div>
+                </td>
+                <td>${price}</td>
+                <td>
+                    <img src={cross} alt="cross" />
+                </td>
+            </tr>
+            {openModalRemoveCart
+                ? ReactDOM.createPortal(
+                      <div id="custom-modal" className={`custom-modal ${openModalRemoveCart ? '' : 'modal-hide'}`}>
+                          <div
+                              id="custom-modal-close"
+                              onClick={() => setOpenModalRemoveCart(false)}
+                              className="custom-modal--bg"
+                          ></div>
+                          <div className="custom-modal--container">
+                              <div className="custom-modal--content">
+                                  <div className="modal-content">
+                                      <strong>You are about to remove this item from your cart. Are you sure ?</strong>
+                                      <div>
+                                          <button
+                                              className="custom-btn mr-1 pl-6 pr-6"
+                                              onClick={e => {
+                                                  dispatch(removeCart(cartId));
+                                                  setOpenModalRemoveCart(false);
+                                              }}
+                                          >
+                                              Yes
+                                          </button>
+                                          <button
+                                              className="custom-btn ml-1 pl-6 pr-6"
+                                              onClick={() => setOpenModalRemoveCart(false)}
+                                          >
+                                              No
+                                          </button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>,
+                      document.getElementById('portal-root')
+                  )
+                : ''}
+        </>
     );
 }
 

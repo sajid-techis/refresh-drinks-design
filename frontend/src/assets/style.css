@@ -95,6 +95,7 @@ header .right-nav {
     padding: 0px 50px;
 }
 .just-for-you .item-container .item-flex {
+    list-style: none;
     display: flex;
     justify-content: space-between;
     align-items: center;

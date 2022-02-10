@@ -68,7 +68,36 @@ export default class API {
         return api.post('/users/signin/', formData);
     };
 
+    //Products
     getProducts = (query = {}) => {
         return api.get('/products/', { params: query, requireToken: true });
+    };
+
+    // Cart
+    getCarts = (query = {}) => {
+        return api.get('/carts/', { params: query, requireToken: true });
+    };
+
+    addCart = addCartBody => {
+        const formData = new FormData();
+        for (const key in addCartBody) {
+            formData.append(key, addCartBody[key]);
+        }
+        return api.post('/carts/add/', formData, { requireToken: true });
+    };
+
+    updateCart = (updateCartBody, cartId) => {
+        const formData = new FormData();
+        for (const key in updateCartBody) {
+            formData.append(key, updateCartBody[key]);
+        }
+        return api.put(`/carts/update/${cartId}/`, formData, {
+            requireToken: true
+        });
+    };
+
+    // Checkout
+    checkoutOrder = checkoutOrderBody => {
+        return api.post('/orders/add/', checkoutOrderBody, { requireToken: true });
     };
 }
