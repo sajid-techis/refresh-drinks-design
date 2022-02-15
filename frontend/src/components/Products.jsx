@@ -1,8 +1,5 @@
 import React from 'react';
-import mainbackground from '../assets/img/main-background.png';
 import favorite from '../assets/img/favorite.svg';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { useDispatch } from 'react-redux';
 
 import { addCart, removeCart, updateCart } from '../reducks/cart/operations';
@@ -11,16 +8,18 @@ function Products(props) {
     const { id, name, price, image } = props.item;
     let quantity = props.cart ? props.cart.quantity : 0;
     const cartId = props.cart ? props.cart.id : 0;
-
+    console.log(quantity);
     const dispatch = useDispatch();
 
     const addToCart = () => {
         dispatch(addCart({ quantity: 1, product: id }));
+        console.log('add');
     };
 
     const increaseCart = () => {
         ++quantity;
         dispatch(updateCart({ quantity }, cartId));
+        console.log('increase');
     };
 
     const decreaseCart = () => {
@@ -30,7 +29,6 @@ function Products(props) {
         }
         dispatch(updateCart({ quantity }, cartId));
     };
-    console.log(cartId);
     return (
         <>
             <ul class="item-flex">
@@ -57,7 +55,7 @@ function Products(props) {
                                 </span>
                             </div>
                         ) : (
-                            <button onClick={addToCart}>ADD TO CART</button>
+                            <button onClick={addToCart}>ADD +</button>
                         )}
                     </div>
                 </li>

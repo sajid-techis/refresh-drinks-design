@@ -1,5 +1,6 @@
-import API, {LOGIN_USER_KEY} from "../../API";
-import { signInAction, signInError, signUpAction, signUpError, signUserStoreAction } from './actions';
+import API, { LOGIN_USER_KEY } from '../../API';
+import { signInAction, signInError, signUpAction, signUpError, signUserStoreAction, signOutAction } from './actions';
+import { push } from 'connected-react-router';
 
 const api = new API();
 
@@ -39,5 +40,13 @@ export const signIn = (data = {}, onSuccess = null) => {
             .catch(error => {
                 dispatch(signInError(error.response.data));
             });
+    };
+};
+
+export const signOut = () => {
+    return async dispatch => {
+        dispatch(signOutAction());
+        localStorage.removeItem(LOGIN_USER_KEY);
+        dispatch(push('/signin'));
     };
 };

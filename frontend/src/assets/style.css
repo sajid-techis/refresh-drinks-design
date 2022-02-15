@@ -72,15 +72,6 @@ header .right-nav {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
         rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 }
-.added-cart {
-    display: flex;
-    padding: 4px 12px;
-    background-color: #3c3e3c;
-    color: #fff;
-    font-size: 24px;
-    align-items: center;
-    user-select: none;
-}
 .just-for-you {
     margin: 50px 0px;
 }
@@ -579,6 +570,36 @@ footer p {
     border: 0;
     color: #fff;
     background-color: #ff6c00;
+}
+.added-cart {
+    display: flex;
+    padding: 4px 12px;
+    background-color: #fff;
+    color: black;
+    font-size: 24px;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.added-cart span:nth-child(2) {
+    margin: 0 14px;
+    font-size: 18px;
+}
+
+.added-cart :not(span:nth-child(2)) {
+    cursor: pointer;
+    font-weight: 600;
+}
+.add-cart-btn {
+    font-size: 20px;
+    padding: 8px 24px;
+    background-color: #3c3e3c;
+    color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+        rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 }
 /**************************
 ****Media Screen

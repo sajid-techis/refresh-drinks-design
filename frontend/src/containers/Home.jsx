@@ -10,41 +10,43 @@ import CartProducts from '../components/CartProducts';
 import Products from '../components/Products';
 import left_arrow from '../assets/img/left-arrow.svg';
 import arrow_right from '../assets/img/arrow-right.svg';
+import { getCarts } from '../reducks/cart/selectors';
 
 function Home() {
     const selector = useSelector(state => state);
     const dispatch = useDispatch();
     const products = getProducts(selector);
+    const carts = getCarts(selector);
 
-    // useEffect(() => {
-    //     dispatch(fetchProducts());
-    //     console.log(products);
-    //     if (localStorage.getProducts('LOGIN_USER_KEY')) {
-    //         dispatch(fetchCarts());
-    //     }
-    // }, []);
     useEffect(() => {
         dispatch(fetchProducts());
+        if (localStorage.getItem('LOGIN_USER_KEY')) {
+            dispatch(fetchCarts());
+        }
     }, []);
     console.log(products);
+    console.log(carts);
     return (
         <>
             <Header />
             <MainBackground />
             <section className="item-container">
-                <section class="just-for-you">
-                    <div class="heading">
+                <section className="just-for-you">
+                    <div className="heading">
                         <p>Selected just for you</p>
                     </div>
-                    <div class="item-container">
+                    <div className="item-container">
                         <img src={left_arrow} alt="left-arrow" />
-                        <ul class="item-flex">
+                        <ul className="item-flex">
                             {products &&
-                                products.results.map(product => (
-                                    <li class="item">
-                                        <Products key={product.id} item={product} />
-                                    </li>
-                                ))}
+                                products.results.map(product => {
+                                    const cart = carts.results.find(c => c.product.id === product.id) || null;
+                                    return (
+                                        <li className="item" key={product.id}>
+                                            <Products key={product.id} item={product} cart={cart} />
+                                        </li>
+                                    );
+                                })}
                             <img src={arrow_right} alt="arrow-right" />
                         </ul>
                     </div>

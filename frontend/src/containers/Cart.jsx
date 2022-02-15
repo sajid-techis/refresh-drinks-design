@@ -25,7 +25,6 @@ function Cart() {
             <Header />
             <section className="main-wrapper">
                 <div className="cart">
-                    <p className="title">My Cart(s)</p>
                     {isEmpty && (
                         <>
                             <p>Cart is empty. Please go to shopping in order to add product to cart.</p>
@@ -37,15 +36,7 @@ function Cart() {
                     <section class="wish-list">
                         <p>Wish List</p>
                         <div class="wish-list-table">
-                            <table>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Categoty</th>
-                                    <th>Amount</th>
-                                    <th>Price</th>
-                                </tr>
-                                {!isEmpty && carts.results.map(cart => <CartProducts key={cart.id} cart={cart} />)}
-                            </table>
+                            {!isEmpty && carts.results.map(cart => <CartProducts key={cart.id} cart={cart} />)}
                         </div>
                     </section>
                 </div>
