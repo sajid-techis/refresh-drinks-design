@@ -100,4 +100,35 @@ export default class API {
     checkoutOrder = checkoutOrderBody => {
         return api.post('/orders/add/', checkoutOrderBody, { requireToken: true });
     };
+
+    //Favourite
+
+    getFavorites = async () => {
+        const favorites = await api
+            .get('/favorites/', { requireToken: true })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                throw new Error(error);
+            });
+        return favorites;
+    };
+
+    addFavorites = async addFavoriteBody => {
+        //{homeId: homeId} = {homeId}
+        const savedPost = await api
+            .post('/favorites/add/', addFavoriteBody, { requireToken: true })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                throw new Error(error);
+            });
+        return savedPost;
+    };
+
+    deleteFavorites = id => {
+        return api.delete(`favorites/delete/${id}`, { requireToken: true });
+    };
 }

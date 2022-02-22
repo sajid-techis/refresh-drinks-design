@@ -1,15 +1,15 @@
-import initialState from "../store/initialState";
-import * as Actions from "./actions";
+import initialState from '../store/initialState';
+import * as Actions from './actions';
 
 export const ProductsReducer = (state = initialState.products, action) => {
-	switch (action.type) {
-		case Actions.FETCH_PRODUCTS:
-			return {
-				...state,
+    switch (action.type) {
+        case Actions.FETCH_PATENTS:
+            return {
+                ...state,
                 ...action.payload.products,
-				results: [...action.payload.products.results],
-			};
-		default:
-			return state;
-	}
+                results: [...action.payload.products.results]
+            };
+        default:
+            return state;
+    }
 };

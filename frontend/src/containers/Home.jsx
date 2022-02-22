@@ -6,11 +6,11 @@ import MainBackground from '../components/MainBackground';
 import { fetchProducts } from '../reducks/product/operations';
 import { getProducts } from '../reducks/product/selectors';
 import { fetchCarts } from '../reducks/cart/operations';
-import CartProducts from '../components/CartProducts';
 import Products from '../components/Products';
 import left_arrow from '../assets/img/left-arrow.svg';
 import arrow_right from '../assets/img/arrow-right.svg';
 import { getCarts } from '../reducks/cart/selectors';
+import Favourites from '../components/Favourites';
 
 function Home() {
     const selector = useSelector(state => state);
@@ -38,20 +38,22 @@ function Home() {
                     <div className="item-container">
                         <img src={left_arrow} alt="left-arrow" />
                         <ul className="item-flex">
-                            {products &&
-                                products.results.map(product => {
-                                    const cart = carts.results.find(c => c.product.id === product.id) || null;
-                                    return (
-                                        <li className="item" key={product.id}>
-                                            <Products key={product.id} item={product} cart={cart} />
-                                        </li>
-                                    );
-                                })}
+                            {products && products.length !== 0
+                                ? products.results.map(product => {
+                                      const cart = carts.results.find(c => c.product.id === product.id) || null;
+                                      return (
+                                          <li className="item" key={product.id}>
+                                              <Products key={product.id} product={product} cart={cart} />
+                                          </li>
+                                      );
+                                  })
+                                : ''}
                             <img src={arrow_right} alt="arrow-right" />
                         </ul>
                     </div>
                 </section>
             </section>
+            <Favourites />
             <Footer />
         </>
     );
